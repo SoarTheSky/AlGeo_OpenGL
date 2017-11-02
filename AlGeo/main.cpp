@@ -3,6 +3,9 @@
 #include <iostream>
 #include <cstring>
 #include <string>
+#include <cstdio>
+#include <stdlib.h>
+#include "/Users/rama/Desktop/src/stdc++.h"
 ///# Later
 #elif defined (WIN32)
 #include <windows.h>
@@ -11,7 +14,7 @@
 #endif
 using namespace std;
 
-int w = 500, h = 500, res = 2000;
+int w = 1000, h = 1000, res = 100;
 int n_vertice, reps;
 double x[100],y[100],temp;
 bool finish_animate = true;
@@ -57,7 +60,7 @@ void shapes(){
     
     //Set the camera perspective
     glLoadIdentity(); //Reset the camera
-    glOrtho(-500,500,-500,500,500,500);
+    glOrtho(-500,500,-500,500,-500,500);
     
     glMatrixMode(GL_MODELVIEW); //Switch to the drawing perspective
     glLoadIdentity(); //Reset the drawing perspective

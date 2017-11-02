@@ -7,7 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2159F51B1FA251B4009625C7 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2159F51A1FA251B4009625C7 /* main.cpp */; };
+		2159F5211FA25362009625C7 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2159F51A1FA251B4009625C7 /* main.cpp */; };
+		2159F5241FA25465009625C7 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2159F5231FA25457009625C7 /* OpenGL.framework */; };
+		21DDB4651FA824FF00E7AB56 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21DDB4641FA824F700E7AB56 /* GLUT.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,6 +27,10 @@
 /* Begin PBXFileReference section */
 		2159F5171FA251B4009625C7 /* AlGeo */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = AlGeo; sourceTree = BUILT_PRODUCTS_DIR; };
 		2159F51A1FA251B4009625C7 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		2159F5231FA25457009625C7 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
+		2159F5251FA25488009625C7 /* libGLEW.2.1.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libGLEW.2.1.0.dylib; path = ../../../../../usr/local/Cellar/glew/2.1.0/lib/libGLEW.2.1.0.dylib; sourceTree = "<group>"; };
+		2159F5271FA2549F009625C7 /* libglfw.3.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw.3.2.dylib; path = ../../../../../usr/local/Cellar/glfw/3.2.1/lib/libglfw.3.2.dylib; sourceTree = "<group>"; };
+		21DDB4641FA824F700E7AB56 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -32,6 +38,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				21DDB4651FA824FF00E7AB56 /* GLUT.framework in Frameworks */,
+				2159F5241FA25465009625C7 /* OpenGL.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -43,6 +51,7 @@
 			children = (
 				2159F5191FA251B4009625C7 /* AlGeo */,
 				2159F5181FA251B4009625C7 /* Products */,
+				2159F5221FA25457009625C7 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -60,6 +69,17 @@
 				2159F51A1FA251B4009625C7 /* main.cpp */,
 			);
 			path = AlGeo;
+			sourceTree = "<group>";
+		};
+		2159F5221FA25457009625C7 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				21DDB4641FA824F700E7AB56 /* GLUT.framework */,
+				2159F5271FA2549F009625C7 /* libglfw.3.2.dylib */,
+				2159F5251FA25488009625C7 /* libGLEW.2.1.0.dylib */,
+				2159F5231FA25457009625C7 /* OpenGL.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -119,7 +139,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2159F51B1FA251B4009625C7 /* main.cpp in Sources */,
+				2159F5211FA25362009625C7 /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -233,6 +253,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				HEADER_SEARCH_PATHS = /usr/local/include;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/Cellar/glew/2.1.0/lib,
+					/usr/local/Cellar/glfw/3.2.1/lib,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -241,6 +267,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				HEADER_SEARCH_PATHS = /usr/local/include;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/Cellar/glew/2.1.0/lib,
+					/usr/local/Cellar/glfw/3.2.1/lib,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
