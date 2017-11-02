@@ -7,6 +7,7 @@
 #include <cstdio>
 #include <stdlib.h>
 #include "/Users/rama/Desktop/src/stdc++.h"
+
 #elif defined (WIN32)
 #include <windows.h>
 #include <GL/glut.h>
