@@ -51,6 +51,36 @@ void update_shape(){
         finish_animate = true;
 }
 
+//Draw coordinate lines
+void coordinatelines() {
+    glBegin(GL_LINES);
+    glVertex2f(-500, 0);
+    glVertex2f(500, 0);
+    glLineWidth(5.0);
+    glEnd();
+    
+    glBegin(GL_LINES);
+    glVertex2f(0, -500);
+    glVertex2f(0, 500);
+    glLineWidth(5.0);
+    glEnd();
+    
+//    for(int i=0;i<50;i++) {
+//        glBegin(GL_LINES);
+//        glVertex2f(-480+(i*20), -500);
+//        glVertex2f(-480+(i*20), 500);
+//        glLineWidth(1.0);
+//        glEnd();
+//
+//        glBegin(GL_LINES);
+//        glVertex2f(-500, -480+(i*20));
+//        glVertex2f(500, -480+(i*20));
+//        glLineWidth(1.0);
+//        glEnd();
+//    }
+    
+}
+
 //Draws the 3D scene
 void shapes(){
     //Clear screen
@@ -64,8 +94,10 @@ void shapes(){
     
     glMatrixMode(GL_MODELVIEW); //Switch to the drawing perspective
     glLoadIdentity(); //Reset the drawing perspective
-
-    glBegin(GL_POLYGON); 
+    
+    coordinatelines();
+    
+    glBegin(GL_POLYGON);
     for(int i=0;i<n_vertice;i++){
         glVertex2f(x[i],y[i]);
     }
