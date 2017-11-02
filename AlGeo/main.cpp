@@ -1,5 +1,6 @@
 #if defined (__APPLE__)
 #include <GLUT/glut.h>
+
 #include <iostream>
 #include <cstring>
 #include <string>
@@ -14,9 +15,10 @@
 #endif
 using namespace std;
 
-int w = 1000, h = 1000, res = 100;
+int w = 1000, h = 1000, res = 1000;
 int n_vertice, reps;
 double x[100],y[100],temp;
+double xawal[100], yawal[100];
 bool finish_animate = true;
 
 void init(int argc, char** argv){
@@ -90,7 +92,7 @@ void shapes(){
     
     //Set the camera perspective
     glLoadIdentity(); //Reset the camera
-    glOrtho(-500,500,-500,500,-500,500);
+    glOrtho(-500,500,-500,500,500,500);
     
     glMatrixMode(GL_MODELVIEW); //Switch to the drawing perspective
     glLoadIdentity(); //Reset the drawing perspective
@@ -103,7 +105,7 @@ void shapes(){
     }
     glEnd();
 
-    glutSwapBuffers();
+    glutPostRedisplay();
 
     if(finish_animate){
         cin>>temp;
@@ -122,8 +124,8 @@ void input(int n){
     int idx = 1;
     printf("\nInsert\n");
     for(int i = 0; i < n; i++){
-        printf("x%d : ",idx); scanf("%lf",&x[i]);
-        printf("y%d : ",idx); scanf("%lf",&y[i]); puts("");
+        printf("(x%d,y%d) : ",idx,idx); scanf("%lf",&x[i]); xawal[i] = x[i];
+                                        scanf("%lf",&y[i]); yawal[i] = y[i]; puts("");
         idx++;
     }
 }
