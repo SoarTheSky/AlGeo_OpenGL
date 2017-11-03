@@ -55,31 +55,31 @@ void update_shape(){
 
 //Draw coordinate lines
 void coordinatelines() {
-    glBegin(GL_LINES);
-    glVertex2f(-500, 0);
-    glVertex2f(500, 0);
-    glLineWidth(5.0);
-    glEnd();
+    // glBegin(GL_LINES);
+    // glVertex2f(-500, 0);
+    // glVertex2f(500, 0);
+    // glLineWidth(5.0);
+    // glEnd();
     
-    glBegin(GL_LINES);
-    glVertex2f(0, -500);
-    glVertex2f(0, 500);
-    glLineWidth(5.0);
-    glEnd();
+    // glBegin(GL_LINES);
+    // glVertex2f(0, -500);
+    // glVertex2f(0, 500);
+    // glLineWidth(5.0);
+    // glEnd();
     
-//    for(int i=0;i<50;i++) {
-//        glBegin(GL_LINES);
-//        glVertex2f(-480+(i*20), -500);
-//        glVertex2f(-480+(i*20), 500);
-//        glLineWidth(1.0);
-//        glEnd();
-//
-//        glBegin(GL_LINES);
-//        glVertex2f(-500, -480+(i*20));
-//        glVertex2f(500, -480+(i*20));
-//        glLineWidth(1.0);
-//        glEnd();
-//    }
+   for(int i=0;i<50;i++) {
+       glBegin(GL_LINES);
+       glVertex2f(-480+(i*2), -500);
+       glVertex2f(-480+(i*2), 500);
+       glLineWidth(5.0);
+       glEnd();
+
+       glBegin(GL_LINES);
+       glVertex2f(-500, -480+(i*2));
+       glVertex2f(500, -480+(i*2));
+       glLineWidth(5.0);
+       glEnd();
+   }
     
 }
 
@@ -91,13 +91,14 @@ void shapes(){
     glMatrixMode(GL_PROJECTION); //Switch to setting the camera perspective
     
     //Set the camera perspective
-    glLoadIdentity(); //Reset the camera
-    glOrtho(-500,500,-500,500,500,500);
+
+    glLoadIdentity();
+    glOrtho(-w*1.0,w*1.0,-h*1.0,h*1.0, 0.0f, 1.0f);
     
     glMatrixMode(GL_MODELVIEW); //Switch to the drawing perspective
     glLoadIdentity(); //Reset the drawing perspective
     
-    coordinatelines();
+  //  coordinatelines();
     
     glBegin(GL_POLYGON);
     for(int i=0;i<n_vertice;i++){
@@ -108,7 +109,7 @@ void shapes(){
     glutSwapBuffers();
 
     if(finish_animate){
-        cin>>temp;
+        scanf("%lf",&temp);
         finish_animate = false;
         reps = res;
     }
@@ -134,7 +135,7 @@ void input(int n){
 
 int main(int argc, char** argv) {
     init(argc, argv); //Initialize rendering
-    cout<<"Total Vertices : "; cin>>n_vertice;
+    printf("Total Vertices : "); scanf("%d",&n_vertice);
     input(n_vertice);
     draw();
     glutReshapeFunc(handleResize);
