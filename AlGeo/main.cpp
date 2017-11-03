@@ -54,32 +54,34 @@ void update_shape(){
 }
 
 //Draw coordinate lines
-void coordinatelines() {
-    // glBegin(GL_LINES);
-    // glVertex2f(-500, 0);
-    // glVertex2f(500, 0);
-    // glLineWidth(5.0);
-    // glEnd();
-    
-    // glBegin(GL_LINES);
-    // glVertex2f(0, -500);
-    // glVertex2f(0, 500);
-    // glLineWidth(5.0);
-    // glEnd();
-    
-   for(int i=0;i<50;i++) {
-       glBegin(GL_LINES);
-       glVertex2f(-480+(i*2), -500);
-       glVertex2f(-480+(i*2), 500);
-       glLineWidth(5.0);
-       glEnd();
 
-       glBegin(GL_LINES);
-       glVertex2f(-500, -480+(i*2));
-       glVertex2f(500, -480+(i*2));
-       glLineWidth(5.0);
-       glEnd();
-   }
+void drawline (float x1, float y1, float x2, float y2)
+{
+    glBegin (GL_LINES);
+    glVertex2f (x1, y1);
+    glVertex2f (x2, y2);
+    glEnd();
+}
+
+void coordinatelines() {
+    glClearColor (0, 0, 0, 0);
+    glColor3ub (210, 57, 53);
+
+    for (int i = -h; i < h; i +=50)
+    {
+        if ((int) i % 300 == 0) glLineWidth (2.5);
+        else if ((int) i % 150 == 0) glLineWidth (1.5);
+        else glLineWidth (0.2);
+        drawline (-w, float(i), (float) w, float(i));
+    }
+
+    for (float i = -w; i < w; i +=50)
+    {
+        if ((int) i % 300 == 0) glLineWidth (2.5);
+        else if ((int) i % 150 == 0) glLineWidth (1.5);
+        else glLineWidth (0.2);
+        drawline (i, -h, i, (float) h);
+    }
     
 }
 
@@ -98,7 +100,7 @@ void shapes(){
     glMatrixMode(GL_MODELVIEW); //Switch to the drawing perspective
     glLoadIdentity(); //Reset the drawing perspective
     
-  //  coordinatelines();
+    coordinatelines();
     
     glBegin(GL_POLYGON);
     for(int i=0;i<n_vertice;i++){
