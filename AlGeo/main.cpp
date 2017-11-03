@@ -25,7 +25,6 @@ bool finish_animate = true;
 bool rotation_animate = false;
 bool inputted = false;
 string input_operator, param1, param2, param3, param4;
-bool op1 = false,op2 = false,op3 = false,op4 = false;
 
 void init(int argc, char** argv){
     //Initialize GLUT
@@ -66,9 +65,34 @@ void updatematrix() {
 //        finish_animate = true;
 //}
 
+void outputmanual() {
+    cout << endl << "Input commands available:" << endl << endl;
+    cout << "translate <dx> <dy>" << endl;
+    cout << "dilate <k>" << endl;
+    cout << "rotate <deg> <a> <b>" << endl;
+    cout << "reflect <param>" << endl;
+    cout << "shear <param> <k>" << endl;
+    cout << "stretch <param> <k>" << endl;
+    cout << "custom <a> <b> <c> <d>" <<endl;
+    cout << "multiple <n>" << endl;
+    cout << "reset" << endl;
+    cout << "exit" << endl << endl;
+}
+
+void welcomescreen() {
+    cout << "  ________  ___       ________  _______   ________          ________  ________  _______   ________   ________  ___           " << endl;
+    cout << " |\\   __  \\|\\  \\     |\\   ____\\|\\  ___ \\ |\\   __  \\        |\\   __  \\|\\   __  \\|\\  ___ \\ |\\   ___  \\|\\   ____\\|\\  \\          " << endl;
+    cout << " \\ \\  \\|\\  \\ \\  \\    \\ \\  \\___|\\ \\   __/|\\ \\  \\|\\  \\       \\ \\  \\|\\  \\ \\  \\|\\  \\ \\   __/|\\ \\  \\\\ \\  \\ \\  \\___|\\ \\  \\         " << endl;
+    cout << "  \\ \\   __  \\ \\  \\    \\ \\  \\  __\\ \\  \\_|/_\\ \\  \\\\\\  \\       \\ \\  \\\\\\  \\ \\   ____\\ \\  \\_|/_\\ \\  \\\\ \\  \\ \\  \\  __\\ \\  \\        " << endl;
+    cout << "   \\ \\  \\ \\  \\ \\  \\____\\ \\  \\|\\  \\ \\  \\_|\\ \\ \\  \\\\\\  \\       \\ \\  \\\\\\  \\ \\  \\___|\\ \\  \\_|\\ \\ \\  \\\\ \\  \\ \\  \\|\\  \\ \\  \\____   " << endl;
+    cout << "    \\ \\__\\ \\__\\ \\_______\\ \\_______\\ \\_______\\ \\_______\\       \\ \\_______\\ \\__\\    \\ \\_______\\ \\__\\\\ \\__\\ \\_______\\ \\_______\\ " << endl;
+    cout << "     \\|__|\\|__|\\|_______|\\|_______|\\|_______|\\|_______|        \\|_______|\\|__|     \\|_______|\\|__| \\|__|\\|_______|\\|_______| " << endl;
+    
+    cout << "by" << endl << "13516062" << endl << "13516096" << endl << endl << endl;
+}
+
 void input(int n){
     int idx = 1;
-    printf("\nInsert\n");
     for(int i = 0; i < n; i++){
         printf("(x%d,y%d) : ",idx,idx); scanf("%lf",&xhasil[i]);
         scanf("%lf",&yhasil[i]);
@@ -96,7 +120,7 @@ void coordinatelines() {
     for (int i = -h/2; i < h/2; i +=50)
     {
         if ((int) i == 0) glLineWidth (3.5);
-        else if ((int) i % 150 == 0) glLineWidth (1.5);
+        else if ((int) i % 150 == 0) glLineWidth (2.0);
         else glLineWidth (0.2);
         drawline (-h/2, float(i), (float) h/2, float(i));
     }
@@ -104,7 +128,7 @@ void coordinatelines() {
     for (float i = -w/2; i < w/2; i +=50)
     {
         if ((int) i == 0) glLineWidth (3.5);
-        else if ((int) i % 150 == 0) glLineWidth (1.5);
+        else if ((int) i % 150 == 0) glLineWidth (2.0);
         else glLineWidth (0.2);
         drawline (i, -w/2, i, (float) w/2);
     }
@@ -170,6 +194,58 @@ void rotatevertex(double (&x1)[100], double (&y1)[100], string indeg, string ina
     translate(x1, y1, ina,inb);
 }
 
+void shear(string inparam, string ink) {
+    double k=0;
+    stringstream masukan(ink);
+    masukan >> k;
+    
+    if (inparam == "x") {
+        for(int i=0; i<n_vertice; i++) {
+            xhasil[i] += k*yhasil[i];
+        }
+    }
+    else if (inparam == "y") {
+        for(int i=0; i<n_vertice; i++) {
+            yhasil[i] += k*xhasil[i];
+        }
+    }
+}
+
+void stretch(string inparam, string ink) {
+    double k=0;
+    stringstream masukan(ink);
+    masukan >> k;
+    
+    if (inparam == "x") {
+        for(int i=0; i<n_vertice; i++) {
+            xhasil[i] *= k;
+        }
+    }
+    else if(inparam == "y") {
+        for(int i=0; i<n_vertice; i++) {
+            yhasil[i] *= k;
+        }
+    }
+}
+
+void custom(string ina, string inb, string inc, string ind) {
+    double a=0,b=0,c=0,d=0;
+    stringstream masukan1(ina);
+    masukan1 >> a;
+    stringstream masukan2(inb);
+    masukan2 >> b;
+    stringstream masukan3(inc);
+    masukan3 >> c;
+    stringstream masukan4(ind);
+    masukan4 >> d;
+    
+    for(int i=0; i<n_vertice; i++) {
+        temp = xhasil[i];
+        xhasil[i] = xhasil[i]*a + yhasil[i]*b;
+        yhasil[i] = temp*c + yhasil[i]*d;
+    }
+}
+
 void reset() {
     for(int i=0; i<n_vertice; i++) {
         xhasil[i] = xawal[i];
@@ -178,12 +254,10 @@ void reset() {
 }
 
 
-void insertfactor(bool b) {
-    if (!b) {
-        for(int i=0; i<n_vertice; i++) {
-            factorx[i] = (xhasil[i]-x[i])/((double)res);
-            factory[i] = (yhasil[i]-y[i])/((double)res);
-        }
+void insertfactor() {
+    for(int i=0; i<n_vertice; i++) {
+        factorx[i] = (xhasil[i]-x[i])/((double)res);
+        factory[i] = (yhasil[i]-y[i])/((double)res);
     }
 }
 
@@ -205,10 +279,10 @@ void animaterotate (bool b, bool rot) {
     }
 }
 
-void readyanimate(bool b) {
+void readyanimate() {
     reps = res;
     finish_animate = false;
-    insertfactor(b);
+    insertfactor();
 }
 
 void readyrotate() {
@@ -249,21 +323,42 @@ void shapes(){
         if(input_operator == "translate") {
             cin >> param1 >> param2;
             translate(xhasil, yhasil,param1,param2);
-            readyanimate(false);
+            readyanimate();
         }
         else if(input_operator == "dilate") {
             cin >> param1;
             dilate(param1);
-            readyanimate(false);
+            readyanimate();
         }
         else if(input_operator == "rotate") {
             cin >> param1 >> param2 >> param3;
             rotatevertex(xhasil, yhasil, param1, param2, param3);
             readyrotate();
         }
+        else if(input_operator == "shear") {
+            cin >> param1 >> param2;
+            shear(param1,param2);
+            readyanimate();
+        }
+        else if(input_operator == "stretch") {
+            cin >> param1 >> param2;
+            stretch(param1,param2);
+            readyanimate();
+        }
+        else if(input_operator == "custom") {
+            cin >> param1 >> param2 >> param3 >> param4;
+            custom(param1,param2,param3,param4);
+            readyanimate();
+        }
         else if(input_operator == "reset") {
             reset();
-            readyanimate(false);
+            readyanimate();
+        }
+        else if(input_operator == "exit") {
+            exit(0);
+        }
+        else if(input_operator == "0") {
+            outputmanual();
         }
         else {
             cout<<"Masukkan salah\n";
@@ -283,10 +378,11 @@ void draw(){
 
 int main(int argc, char** argv) {
     init(argc, argv); //Initialize rendering
-    printf("Total Vertices : "); scanf("%d",&n_vertice);
+    welcomescreen();
+    printf("Input Total Vertices : "); scanf("%d",&n_vertice);
     input(n_vertice);
     cout<<"\nPress 0 for info\n";
-    readyanimate(false);
+    readyanimate();
     draw();
     glutReshapeFunc(handleResize);
     //glutKeyboardFunc(key_back);
