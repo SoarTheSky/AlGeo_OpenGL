@@ -1,6 +1,5 @@
 #if defined (__APPLE__)
 #include <GLUT/glut.h>
-
 #include <iostream>
 #include <cstring>
 #include <string>
@@ -15,11 +14,16 @@
 #endif
 using namespace std;
 
-int w = 1000, h = 1000, res = 1000;
+int w = 1000, h = 1000, res = 50;
 int n_vertice, reps;
 double x[100],y[100],temp;
+double xhasil[100], yhasil[100];
 double xawal[100], yawal[100];
+double factorx[100], factory[100];
 bool finish_animate = true;
+bool inputted = false;
+string input_operator, param1, param2, param3, param4;
+bool op1 = false,op2 = false,op3 = false,op4 = false;
 
 void init(int argc, char** argv){
     //Initialize GLUT
@@ -41,79 +45,189 @@ void handleResize(int w, int h){
 //     else if (key == 'q') zoom += 5;
 // }
 
-void update_shape(){
-    double factor;
-    factor = temp/(res*1.0);
-    for(int i=0;i<n_vertice;i++){
-        x[i]+=factor;
-        y[i]+=factor;
+void updatematrix() {
+    for(int i=0; i<n_vertice; i++) {
+        x[i] = xhasil[i];
+        y[i] = yhasil[i];
     }
-    reps--;
-    if(reps <= 0)
-        finish_animate = true;
+}
+
+//void update_shape(){
+//    double factor;
+//    factor = temp/(res*1.0);
+//    for(int i=0;i<n_vertice;i++){
+//        x[i]+=factor;
+//        y[i]+=factor;
+//    }
+//    reps--;
+//    if(reps <= 0)
+//        finish_animate = true;
+//}
+
+void input(int n){
+    int idx = 1;
+    printf("\nInsert\n");
+    for(int i = 0; i < n; i++){
+        printf("(x%d,y%d) : ",idx,idx); scanf("%lf",&xhasil[i]);
+        scanf("%lf",&yhasil[i]);
+        idx++;
+        xawal[i] = xhasil[i];
+        yawal[i] = yhasil[i];
+        x[i] = 0;
+        y[i] = 0;
+    }
 }
 
 //Draw coordinate lines
-void coordinatelines() {
-    // glBegin(GL_LINES);
-    // glVertex2f(-500, 0);
-    // glVertex2f(500, 0);
-    // glLineWidth(5.0);
-    // glEnd();
-    
-    // glBegin(GL_LINES);
-    // glVertex2f(0, -500);
-    // glVertex2f(0, 500);
-    // glLineWidth(5.0);
-    // glEnd();
-    
-   for(int i=0;i<50;i++) {
-       glBegin(GL_LINES);
-       glVertex2f(-480+(i*2), -500);
-       glVertex2f(-480+(i*2), 500);
-       glLineWidth(5.0);
-       glEnd();
+void drawline (float x1, float y1, float x2, float y2)
+{
+    glBegin (GL_LINES);
+    glVertex2f (x1, y1);
+    glVertex2f (x2, y2);
+    glEnd();
+}
 
-       glBegin(GL_LINES);
-       glVertex2f(-500, -480+(i*2));
-       glVertex2f(500, -480+(i*2));
-       glLineWidth(5.0);
-       glEnd();
-   }
+void coordinatelines() {
+    glClearColor (0, 0, 0, 0);
+    glColor3ub (210, 57, 53);
     
+    for (int i = -h/2; i < h/2; i +=50)
+    {
+        if ((int) i == 0) glLineWidth (3.5);
+        else if ((int) i % 150 == 0) glLineWidth (1.5);
+        else glLineWidth (0.2);
+        drawline (-h/2, float(i), (float) h/2, float(i));
+    }
+    
+    for (float i = -w/2; i < w/2; i +=50)
+    {
+        if ((int) i == 0) glLineWidth (3.5);
+        else if ((int) i % 150 == 0) glLineWidth (1.5);
+        else glLineWidth (0.2);
+        drawline (i, -w/2, i, (float) w/2);
+    }
+    
+}
+
+void update(bool b) {
+    if (!b) {
+        if(reps > 0) {
+            for(int i=0;i<n_vertice;i++) {
+                x[i] += factorx[i];
+                y[i] += factory[i];
+            }
+            reps--;
+        }
+        else if (reps == 0) {
+            updatematrix();
+            reps--;
+        }
+        else {
+            finish_animate = true;
+        }
+    }
+}
+
+
+void translate(string inx, string iny) {
+    double dx=0, dy=0;
+    stringstream masukan1(inx);
+    masukan1 >> dx;
+    stringstream masukan2(iny);
+    masukan2 >> dy;
+    for(int i=0; i<n_vertice; i++) {
+        xhasil[i] = xhasil[i] + dx;
+        yhasil[i] = yhasil[i] + dy;
+    }
+}
+
+void dilate(string in) {
+    double d = 0;
+    stringstream masukan(in);
+    masukan >> d;
+    for(int i=0; i<n_vertice; i++) {
+        xhasil[i] = xhasil[i]*d;
+        yhasil[i] = yhasil[i]*d;
+    }
+}
+
+void rotatevertex(string deg, string ina, string inb) {
+    
+}
+
+void reset() {
+    for(int i=0; i<n_vertice; i++) {
+        xhasil[i] = xawal[i];
+        yhasil[i] = yawal[i];
+    }
+}
+
+
+void insertfactor() {
+    for(int i=0; i<n_vertice; i++) {
+        factorx[i] = (xhasil[i]-x[i])/((double)res);
+        factory[i] = (yhasil[i]-y[i])/((double)res);
+    }
+}
+
+void readyanimate() {
+    reps = res;
+    finish_animate = false;
+    insertfactor();
 }
 
 //Draws the 3D scene
 void shapes(){
     //Clear screen
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+    
     glMatrixMode(GL_PROJECTION); //Switch to setting the camera perspective
     
     //Set the camera perspective
-
+    
     glLoadIdentity();
-    glOrtho(-w*1.0,w*1.0,-h*1.0,h*1.0, 0.0f, 1.0f);
+    glOrtho(-w*0.5,w*0.5,-h*0.5,h*0.5, 0.0f, 1.0f);
     
     glMatrixMode(GL_MODELVIEW); //Switch to the drawing perspective
     glLoadIdentity(); //Reset the drawing perspective
     
-  //  coordinatelines();
+    coordinatelines();
     
     glBegin(GL_POLYGON);
-    for(int i=0;i<n_vertice;i++){
-        glVertex2f(x[i],y[i]);
-    }
+        for(int i=0;i<n_vertice;i++){
+            glVertex2f(x[i],y[i]);
+        }
     glEnd();
+    
+    if(finish_animate) {
+        cin >> input_operator;
+        if(input_operator == "translate") {
+            cin >> param1 >> param2;
+            translate(param1,param2);
+            readyanimate();
+        }
+        else if(input_operator == "dilate") {
+            cin >> param1;
+            dilate(param1);
+            readyanimate();
+        }
+        else if(input_operator == "rotate") {
+            cin >> param1 >> param2 >> param3;
+            rotatevertex(param1, param2, param3);
+            readyanimate();
+        }
+        else if(input_operator == "reset") {
+            reset();
+            readyanimate();
+        }
+        else {
+            cout<<"Masukkan salah\n";
+        }
+    }
+    
+    update(finish_animate);
 
     glutSwapBuffers();
-
-    if(finish_animate){
-        scanf("%lf",&temp);
-        finish_animate = false;
-        reps = res;
-    }
-    update_shape();
 }
 
 void draw(){
@@ -121,25 +235,15 @@ void draw(){
     glutIdleFunc(shapes);
 }
 
-void input(int n){
-    int idx = 1;
-    printf("\nInsert\n");
-    for(int i = 0; i < n; i++){
-        printf("(x%d,y%d) : ",idx,idx); scanf("%lf",&x[i]);
-                                        scanf("%lf",&y[i]);
-        idx++;
-        xawal[i] = x[i];
-        yawal[i] = y[i];
-    }
-}
-
 int main(int argc, char** argv) {
     init(argc, argv); //Initialize rendering
     printf("Total Vertices : "); scanf("%d",&n_vertice);
     input(n_vertice);
+    cout<<"\nPress 0 for info\n";
+    readyanimate();
     draw();
     glutReshapeFunc(handleResize);
     //glutKeyboardFunc(key_back);
-    glutMainLoop(); 
-    return 0; 
+    glutMainLoop();
+    return 0;
 }
