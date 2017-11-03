@@ -15,12 +15,14 @@
 using namespace std;
 
 int w = 1000, h = 1000, res = 50;
+double resdeg = 0;
 int n_vertice, reps;
 double x[100],y[100],temp;
 double xhasil[100], yhasil[100];
 double xawal[100], yawal[100];
 double factorx[100], factory[100];
 bool finish_animate = true;
+bool rotation_animate = false;
 bool inputted = false;
 string input_operator, param1, param2, param3, param4;
 bool op1 = false,op2 = false,op3 = false,op4 = false;
@@ -109,8 +111,8 @@ void coordinatelines() {
     
 }
 
-void update(bool b) {
-    if (!b) {
+void update(bool b, bool rot) {
+    if ((!b) and (!rot)) {
         if(reps > 0) {
             for(int i=0;i<n_vertice;i++) {
                 x[i] += factorx[i];
@@ -128,16 +130,15 @@ void update(bool b) {
     }
 }
 
-
-void translate(string inx, string iny) {
+void translate(double (&x1)[100], double (&y1)[100], string inx, string iny) {
     double dx=0, dy=0;
     stringstream masukan1(inx);
     masukan1 >> dx;
     stringstream masukan2(iny);
     masukan2 >> dy;
     for(int i=0; i<n_vertice; i++) {
-        xhasil[i] = xhasil[i] + dx;
-        yhasil[i] = yhasil[i] + dy;
+        x1[i] = x1[i] + dx;
+        y1[i] = y1[i] + dy;
     }
 }
 
@@ -151,8 +152,22 @@ void dilate(string in) {
     }
 }
 
-void rotatevertex(string deg, string ina, string inb) {
+void rotatevertex(double (&x1)[100], double (&y1)[100], string indeg, string ina, string inb) {
+    double deg=0;
+    double temp;
+    stringstream masukan1(indeg);
+    masukan1 >> deg;
     
+    //Radian
+    double rad = deg * (3.141592/180);
+    
+    translate(x1, y1, "-"+ina, "-"+inb);
+    for(int i=0; i<n_vertice; i++) {
+        temp = x1[i];
+        x1[i] = (x1[i]*cos(rad)) - (y1[i]*sin(rad));
+        y1[i] = (temp*sin(rad)) + (y1[i]*cos(rad));
+    }
+    translate(x1, y1, ina,inb);
 }
 
 void reset() {
@@ -163,17 +178,47 @@ void reset() {
 }
 
 
-void insertfactor() {
-    for(int i=0; i<n_vertice; i++) {
-        factorx[i] = (xhasil[i]-x[i])/((double)res);
-        factory[i] = (yhasil[i]-y[i])/((double)res);
+void insertfactor(bool b) {
+    if (!b) {
+        for(int i=0; i<n_vertice; i++) {
+            factorx[i] = (xhasil[i]-x[i])/((double)res);
+            factory[i] = (yhasil[i]-y[i])/((double)res);
+        }
     }
 }
 
-void readyanimate() {
+void animaterotate (bool b, bool rot) {
+    if ((!b) and (rot)) {
+        if(reps > 0) {
+            rotatevertex(x, y, to_string(resdeg), param2, param3);
+            reps--;
+        }
+        else if (reps == 0) {
+            updatematrix();
+            reps--;
+        }
+        else {
+            finish_animate = true;
+            rotation_animate = false;
+            resdeg = 0;
+        }
+    }
+}
+
+void readyanimate(bool b) {
     reps = res;
     finish_animate = false;
-    insertfactor();
+    insertfactor(b);
+}
+
+void readyrotate() {
+    double deg;
+    stringstream masukkan(param1);
+    masukkan >> deg;
+    reps = res;
+    finish_animate = false;
+    rotation_animate = true;
+    resdeg = deg/((double)res);
 }
 
 //Draws the 3D scene
@@ -203,29 +248,30 @@ void shapes(){
         cin >> input_operator;
         if(input_operator == "translate") {
             cin >> param1 >> param2;
-            translate(param1,param2);
-            readyanimate();
+            translate(xhasil, yhasil,param1,param2);
+            readyanimate(false);
         }
         else if(input_operator == "dilate") {
             cin >> param1;
             dilate(param1);
-            readyanimate();
+            readyanimate(false);
         }
         else if(input_operator == "rotate") {
             cin >> param1 >> param2 >> param3;
-            rotatevertex(param1, param2, param3);
-            readyanimate();
+            rotatevertex(xhasil, yhasil, param1, param2, param3);
+            readyrotate();
         }
         else if(input_operator == "reset") {
             reset();
-            readyanimate();
+            readyanimate(false);
         }
         else {
             cout<<"Masukkan salah\n";
         }
     }
     
-    update(finish_animate);
+    animaterotate(finish_animate,rotation_animate);
+    update(finish_animate,rotation_animate);
 
     glutSwapBuffers();
 }
@@ -240,7 +286,7 @@ int main(int argc, char** argv) {
     printf("Total Vertices : "); scanf("%d",&n_vertice);
     input(n_vertice);
     cout<<"\nPress 0 for info\n";
-    readyanimate();
+    readyanimate(false);
     draw();
     glutReshapeFunc(handleResize);
     //glutKeyboardFunc(key_back);
