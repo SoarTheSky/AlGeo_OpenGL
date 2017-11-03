@@ -105,7 +105,7 @@ void shapes(){
     }
     glEnd();
 
-    glutPostRedisplay();
+    glutSwapBuffers();
 
     if(finish_animate){
         cin>>temp;
@@ -124,9 +124,11 @@ void input(int n){
     int idx = 1;
     printf("\nInsert\n");
     for(int i = 0; i < n; i++){
-        printf("(x%d,y%d) : ",idx,idx); scanf("%lf",&x[i]); xawal[i] = x[i];
-                                        scanf("%lf",&y[i]); yawal[i] = y[i]; puts("");
+        printf("(x%d,y%d) : ",idx,idx); scanf("%lf",&x[i]);
+                                        scanf("%lf",&y[i]);
         idx++;
+        xawal[i] = x[i];
+        yawal[i] = y[i];
     }
 }
 
